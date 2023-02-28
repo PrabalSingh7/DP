@@ -1,0 +1,188 @@
+120. Triangle
+Medium
+7.7K
+463
+Companies
+Given a triangle array, return the minimum path sum from top to bottom.
+
+For each step, you may move to an adjacent number of the row below. More formally, if you are on index i on the current row, you may move to either index i or index i + 1 on the next row.
+
+ 
+
+Example 1:
+
+Input: triangle = [[2],[3,4],[6,5,7],[4,1,8,3]]
+Output: 11
+Explanation: The triangle looks like:
+   2
+  3 4
+ 6 5 7
+4 1 8 3
+The minimum path sum from top to bottom is 2 + 3 + 5 + 1 = 11 (underlined above).
+Example 2:
+
+Input: triangle = [[-10]]
+Output: -10
+ 
+
+Constraints:
+
+1 <= triangle.length <= 200
+triangle[0].length == 1
+triangle[i].length == triangle[i - 1].length + 1
+-104 <= triangle[i][j] <= 104
+ 
+
+Follow up: Could you do this using only O(n) extra space, where n is the total number of rows in the triangle?
+Accepted
+568.9K
+Submissions
+1M
+Acceptance Rate
+54.4%
+
+
+
+
+
+C++ || RECURSION+MEMOIZATION[TLE] -> TABULATION -> SPACE OPTIMIZATION
+_prabal_singh_
+100 Days Badge 2022
+8
+a few seconds ago
+Intuition
+complete transformation of recursive relation to space optimization [entire dynamic programming concept].
+
+Approach
+firstly, derive the recursive relation (index -> operation on index -> conclude operation).
+secondly, use memoization to optimize it.
+EVEN AFTER MEMOIZATION IT WILL GIVE TLE :)
+thirdly, transfrom the recurence relation to tabulation , THIS WILL WORK ;)
+Lastly, SPACE OPTIMIZE the Tabulation function.
+download (2).jfif
+
+Complexity
+Time complexity : O(N*logN)
+Space complexity : O(N+N)
+Code
+class Solution {
+public:
+
+    // //RECURSIVE + MEMOIZATION is giving TLE
+    // int recursion(int r, int c, int n, vector<vector<int>> tri, vector<vector<int>>& dp) {
+    //     if(r<0 || r>= n || c<0 || c>=tri[r].size()) {
+    //         return INT_MAX;
+    //     }
+        
+    //     if(dp[r][c] != INT_MAX) {
+    //         return dp[r][c];
+    //     }
+
+    //     if(r==0 && c==0)    {
+    //         return tri[0][0];
+    //     }
+
+    //     int left = recursion(r-1,c-1,n,tri,dp);
+    //     int right = recursion(r-1,c,n,tri,dp);
+
+    //     return dp[r][c] = tri[r][c] + min(left,right);
+    // }
+
+    // int minimumTotal(vector<vector<int>>& tri) {
+    //     int n = tri.size();
+    //     int val = INT_MAX;
+        
+    //     vector<vector<int>> dp;
+    //     for(int i=0; i<n; i++)  {
+    //         vector<int> layer (i+1,INT_MAX);
+    //         dp.push_back(layer);
+    //     }
+    //     dp[0][0] = tri[0][0];
+
+    //     for(int i=0; i<=n; i++) {
+    //         val = min(val,recursion(n-1,i,n,tri,dp));
+    //     }
+
+    //     return val;
+    // }
+
+
+
+
+    // //TABULATION
+    // int minimumTotal(vector<vector<int>>& tri) {
+    //     int n = tri.size();
+    //     int val = INT_MAX;
+        
+    //     vector<vector<int>> dp;
+    //     for(int i=0; i<n; i++)  {
+    //         vector<int> layer (i+1,INT_MAX);
+    //         dp.push_back(layer);
+    //     }
+    //     dp[0][0] = tri[0][0];
+
+    //     for(int i=1; i<n; i++) {
+    //         for(int j=0; j<i+1; j++)    {
+    //             int left = INT_MAX;
+    //             int right = INT_MAX;
+                
+    //             if(j-1>=0)
+    //                 left = dp[i-1][j-1];
+    //             if(j<i)
+    //                 right = dp[i-1][j];
+                
+    //             int curr = tri[i][j] + min(left,right);
+                
+    //             dp[i][j] = curr;
+    //         }
+    //     }
+
+    //     for(int i=0; i<n; i++)    {
+    //         val = min(val, dp[n-1][i]);
+    //     }
+
+    //     return val;
+    // }
+
+
+
+
+    //SPACE OPTIMIZATION
+    int minimumTotal(vector<vector<int>>& tri) {
+        int n = tri.size();
+        int val = INT_MAX;
+        
+        vector<int> prev (n,INT_MAX);
+        vector<int> prev2 (n,INT_MAX);
+        prev[0] = tri[0][0];
+        prev2[0] = tri[0][0];
+
+        for(int i=1; i<n; i++) {
+            for(int j=0; j<i+1; j++)    {
+                int left = INT_MAX;
+                int right = INT_MAX;
+                
+                if(j-1>=0)
+                    left = prev2[j-1];
+                if(j<i)
+                    right = prev2[j];
+                
+                int curr = tri[i][j] + min(left,right);
+                
+                prev[j] = curr;
+            }
+            prev2 = prev;
+        }
+
+        for(int i=0; i<n; i++)    {
+            val = min(val, prev[i]);
+        }
+
+        return val;
+    }
+};
+download (1).jfif
+
+0
+0
+
