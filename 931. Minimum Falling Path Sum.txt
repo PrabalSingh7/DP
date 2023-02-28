@@ -1,0 +1,179 @@
+931. Minimum Falling Path Sum
+Medium
+4.5K
+120
+Companies
+Given an n x n array of integers matrix, return the minimum sum of any falling path through matrix.
+
+A falling path starts at any element in the first row and chooses the element in the next row that is either directly below or diagonally left/right. Specifically, the next element from position (row, col) will be (row + 1, col - 1), (row + 1, col), or (row + 1, col + 1).
+
+ 
+
+Example 1:
+
+
+Input: matrix = [[2,1,3],[6,5,4],[7,8,9]]
+Output: 13
+Explanation: There are two falling paths with a minimum sum as shown.
+Example 2:
+
+
+Input: matrix = [[-19,57],[-40,-5]]
+Output: -59
+Explanation: The falling path with a minimum sum is shown.
+ 
+
+Constraints:
+
+n == matrix.length == matrix[i].length
+1 <= n <= 100
+-100 <= matrix[i][j] <= 100
+Accepted
+232.9K
+Submissions
+337.1K
+Acceptance Rate
+69.1%
+
+
+
+
+
+C++ || RECURSION + MEMOIZATION (T.L.E) -> TABULATION -> SPACE OPTIMIZATION
+_prabal_singh_
+100 Days Badge 2022
+8
+a few seconds ago
+Intuition
+All steps of Dynamice Programming !!!
+
+Approach
+firstly, derive the recursive relation (index -> operation on index -> conclude operation).
+secondly, use memoization to optimize it.
+EVEN AFTER MEMOIZATION IT WILL GIVE TLE :)
+thirdly, transfrom the recurence relation to tabulation , THIS WILL WORK ;)
+Lastly, SPACE OPTIMIZE the Tabulation function.
+download (2).jfif
+
+Complexity
+https://leetcode.com/problems/minimum-falling-path-sum/submissions/906729424/
+
+Time complexity : O(n*n)
+Space complexity : O(n+n)
+Code
+class Solution {
+public:
+
+    // //RECURSIVE + MEMOIZATION is giving TLE
+    // int fun(int r, int c, int n, vector<vector<int>> matrix, vector<vector<int>>& dp) {
+    //     if(r<0 || r>= n || c<0 || c>=n) {
+    //         return INT_MAX;
+    //     }
+        
+    //     if(dp[r][c] != INT_MAX) {
+    //         return dp[r][c];
+    //     }
+
+    //     int left = fun(r-1,c-1,n,matrix,dp);
+    //     int middle = fun(r-1,c,n,matrix,dp);
+    //     int right = fun(r-1,c+1,n,matrix,dp);
+
+    //     return dp[r][c] = matrix[r][c] + min(left,min(middle,right));
+    // }
+
+    // int minFallingPathSum(vector<vector<int>>& matrix) {
+    //     int n = matrix.size();
+    //     int val = INT_MAX;
+    //     vector<vector<int>> dp (n, vector<int> (n,INT_MAX));
+        
+    //     for(int i=0; i<n; i++)  {
+    //         dp[0][i] = matrix[0][i];
+    //     }
+
+    //     for(int i=0; i<n; i++)  {
+    //         val = min(val,fun(n-1,i,n,matrix,dp));
+    //     }
+
+    //     return val;
+    // }
+
+
+    // // TABULATION
+    // int minFallingPathSum(vector<vector<int>>& matrix) {
+    //     int n = matrix.size();
+    //     int val = INT_MAX;
+    //     vector<vector<int>> dp (n, vector<int> (n,INT_MAX));
+        
+    //     for(int i=0; i<n; i++)  {
+    //         dp[0][i] = matrix[0][i];
+    //     }
+
+    //     for(int i=1; i<n; i++)  {
+    //         for(int j=0; j<n; j++)  {
+    //             int left = INT_MAX-100, middle = INT_MAX-100, right = INT_MAX-100; 
+
+    //             if(j-1>=0)
+    //                 left = dp[i-1][j-1];
+    //             if(j>=0 && j<n)
+    //                 middle = dp[i-1][j];
+    //             if(j+1<n)
+    //                 right = dp[i-1][j+1];
+
+    //             int curr = matrix[i][j] + min(left,min(middle,right));
+    //             dp[i][j] = curr;
+    //         }
+    //     }
+
+    //     for(int i=0; i<n; i++)  {
+    //         val = min(val,dp[n-1][i]);
+    //     }
+
+    //     return val;
+    // }    
+
+
+
+
+
+    // TABULATION + Space Optimization
+    int minFallingPathSum(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        int val = INT_MAX;
+        
+        vector<int> prev (n,INT_MAX);
+        vector<int> prev2 (n,INT_MAX);
+        
+        for(int i=0; i<n; i++)  {
+            prev2[i] = matrix[0][i];
+            prev[i] = matrix[0][i];
+        }
+
+        for(int i=1; i<n; i++)  {
+            for(int j=0; j<n; j++)  {
+                int left = INT_MAX-100, middle = INT_MAX-100, right = INT_MAX-100; 
+
+                if(j-1>=0)
+                    left = prev2[j-1];
+                if(j>=0 && j<n)
+                    middle = prev2[j];
+                if(j+1<n)
+                    right = prev2[j+1];
+
+                int curr = matrix[i][j] + min(left,min(middle,right));
+                prev[j] = curr;
+            }
+            prev2 = prev;
+        }
+
+        for(int i=0; i<n; i++)  {
+            val = min(val,prev[i]);
+        }
+
+        return val;
+    }    
+};
+download (1).jfif
+
+0
+0
+
