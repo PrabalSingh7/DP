@@ -1,0 +1,190 @@
+64. Minimum Path Sum
+Medium
+9.6K
+124
+Companies
+Given a m x n grid filled with non-negative numbers, find a path from top left to bottom right, which minimizes the sum of all numbers along its path.
+
+Note: You can only move either down or right at any point in time.
+
+ 
+
+Example 1:
+
+
+Input: grid = [[1,3,1],[1,5,1],[4,2,1]]
+Output: 7
+Explanation: Because the path 1 → 3 → 1 → 1 → 1 minimizes the sum.
+Example 2:
+
+Input: grid = [[1,2,3],[4,5,6]]
+Output: 12
+ 
+
+Constraints:
+
+m == grid.length
+n == grid[i].length
+1 <= m, n <= 200
+0 <= grid[i][j] <= 100
+Accepted
+852.6K
+Submissions
+1.4M
+Acceptance Rate
+61.0%
+
+
+
+
+
+C++ || RECUSION -> MEMOIZATION -> TABULATION -> SPACE OPTIMIZATION
+_prabal_singh_
+100 Days Badge 2022
+8
+a few seconds ago
+Intuition
+COMPLETE DYNAMIC PROBLEM STEPS !
+
+Approach
+find recussive relation [index -> operation on index -> conclude].
+use memoization in recursive function.
+transform memoization to tabulation [bottom up approach].
+space optimize the tabulation function.
+download (2).jfif
+
+Complexity
+Time complexity : O(m*n)
+Space complexity : O(m+n)
+Code
+class Solution {
+public:
+
+    // //RECURSIVE approach will give TLE
+    // int recursion(int r, int c, int n, int m, vector<vector<int>>& grid) {
+    //     if(r<0 || r>= n || c<0 || c>=m) {
+    //         return INT_MAX;
+    //     }
+        
+    //     if(r==0 && c==0)    {
+    //         return grid[0][0];
+    //     }
+
+    //     int up = recursion(r-1,c,n,m,grid);
+    //     int left = recursion(r,c-1,n,m,grid);
+
+    //     return grid[r][c] + min(up,left);
+    // }
+
+    // int minPathSum(vector<vector<int>>& grid) {
+    //     int n = grid.size();
+    //     int m = grid[0].size();
+
+    //     return recursion(n-1,m-1,n,m,grid);
+    // }
+
+
+
+    // //RECURSION + MEMOIZATION
+    // int memoization(int r, int c, int n, int m, vector<vector<int>>& grid, vector<vector<int>> &dp) {
+    //     if(r<0 || r>= n || c<0 || c>=m) {
+    //         return INT_MAX;
+    //     }
+        
+    //     if(dp[r][c] != INT_MAX)   {
+    //         return dp[r][c];
+    //     }
+
+    //     if(r==0 && c==0)    {
+    //         return grid[0][0];
+    //     }
+
+    //     int up = memoization(r-1,c,n,m,grid,dp);
+    //     int left = memoization(r,c-1,n,m,grid,dp);
+
+    //     return dp[r][c] = grid[r][c] + min(up,left);
+    // }
+
+    // int minPathSum(vector<vector<int>>& grid) {
+    //     int n = grid.size();
+    //     int m = grid[0].size();
+
+    //     vector<vector<int>> dp (n, vector<int> (m,INT_MAX));
+    //     dp[0][0] = grid[0][0];
+
+    //     return memoization(n-1,m-1,n,m,grid,dp);
+    // }
+
+
+
+    // //TABULATION
+    // int minPathSum(vector<vector<int>>& grid) {
+    //     int n = grid.size();
+    //     int m = grid[0].size();
+
+
+    //     vector<vector<int>> dp (n, vector<int> (m,INT_MAX));
+    //     int sum = 0;
+    //     for(int i=0; i<n; i++)  {  
+    //         sum += grid[i][0];
+    //         dp[i][0] = sum;
+    //     }
+    //     sum = 0;
+    //     for(int i=0; i<m; i++)  {  
+    //         sum += grid[0][i];
+    //         dp[0][i] = sum;
+    //     }
+
+
+    //     for(int i=1; i<n; i++)  {
+    //         for(int j=1; j<m; j++) {
+    //             int up = dp[i][j-1];
+    //             int left = dp[i-1][j];
+    //             int curr = grid[i][j] + min(up,left);
+    //             dp[i][j] = curr;
+    //         }
+    //     }
+
+    //     return dp[n-1][m-1];
+    // }
+
+
+
+    //SPACE OPTIMIZATION
+    int minPathSum(vector<vector<int>>& grid) {
+        int n = grid.size();
+        int m = grid[0].size();
+
+        vector<int> prev (m,INT_MAX);
+        vector<int> prev2 (n,INT_MAX);
+
+        int sum = 0;
+        for(int i=0; i<n; i++)  {  
+            sum += grid[i][0];
+            prev2[i] = sum;
+        }
+        sum = 0;
+        for(int i=0; i<m; i++)  {  
+            sum += grid[0][i];
+            prev[i] = sum;
+        }
+
+
+        for(int i=1; i<n; i++)  {
+            for(int j=1; j<m; j++) {
+                int up = prev[j];
+                int left = prev2[i];
+                int curr = grid[i][j] + min(up,left);
+                prev[j] = curr;
+                prev2[i] = curr;
+            }
+        }
+
+        return prev[m-1];
+    }
+};
+download (1).jfif
+
+0
+0
+
