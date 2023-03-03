@@ -1,0 +1,154 @@
+494. Target Sum
+Medium
+8.9K
+310
+Companies
+You are given an integer array nums and an integer target.
+
+You want to build an expression out of nums by adding one of the symbols '+' and '-' before each integer in nums and then concatenate all the integers.
+
+For example, if nums = [2, 1], you can add a '+' before 2 and a '-' before 1 and concatenate them to build the expression "+2-1".
+Return the number of different expressions that you can build, which evaluates to target.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,1,1,1], target = 3
+Output: 5
+Explanation: There are 5 ways to assign symbols to make the sum of nums be target 3.
+-1 + 1 + 1 + 1 + 1 = 3
++1 - 1 + 1 + 1 + 1 = 3
++1 + 1 - 1 + 1 + 1 = 3
++1 + 1 + 1 - 1 + 1 = 3
++1 + 1 + 1 + 1 - 1 = 3
+Example 2:
+
+Input: nums = [1], target = 1
+Output: 1
+ 
+
+Constraints:
+
+1 <= nums.length <= 20
+0 <= nums[i] <= 1000
+0 <= sum(nums[i]) <= 1000
+-1000 <= target <= 1000
+Accepted
+442.6K
+Submissions
+969.7K
+Acceptance Rate
+45.6%
+
+
+
+
+class Solution {
+public:
+
+    //  RECURSION + MEMOIZATION
+    // int fun(int idx, int s, int tar, vector<int> nums, vector<vector<int>> &dp)   {
+    //     if(idx==-1) 
+    //         return tar == 0;        
+
+    //     if(dp[idx][s] != -1)    
+    //         return dp[idx][s];
+
+    //     int not_take = fun(idx-1, s, tar, nums,dp);
+    //     int take = 0;
+    //     if(nums[idx] <= tar)    {
+    //         take = fun(idx-1, s+nums[idx], tar-nums[idx], nums,dp);
+    //     }
+
+    //     return dp[idx][s] = not_take + take;
+    // }
+
+    // int findTargetSumWays(vector<int>& nums, int target) {
+    //     int n = nums.size();
+    //     int ts = 0;
+    //     for(auto i : nums)  ts += i;
+
+    //     if(ts-target<0 || (ts-target)%2 !=0 )  
+    //         return 0;
+
+    //     int tar = (ts-target)/2;
+
+    //     vector<vector<int>> dp (n, vector<int> (tar+1, -1));
+
+    //     return fun(n-1,0,tar,nums,dp);
+    // }
+
+
+    // //TABULATION
+    // int findTargetSumWays(vector<int>& nums, int target) {
+    //     int n = nums.size();
+    //     int ts = 0;
+    //     for(auto i : nums)  ts += i;
+
+    //     if(ts-target<0 || (ts-target)%2 !=0 )  
+    //         return 0;
+
+    //     int tar = (ts-target)/2;
+    //     vector<vector<int>> dp (n, vector<int> (tar+1, 0));
+
+    //     if(nums[0] == 0) dp[0][0] = 2;  // 2 cases -pick and not pick
+    //     else dp[0][0] = 1;  // 1 case - not pick
+    
+    //     if(nums[0]!=0 && nums[0]<=tar) 
+    //         dp[0][nums[0]] = 1;  // 1 case -pick
+
+    //     for(int idx=1; idx<n; idx++)    {
+    //         int val = nums[idx];
+    //         for(int s=0; s<tar+1; s++)  {
+    //             int not_take = dp[idx-1][s];
+    //             int take = 0;
+    //             if(val<=s)  
+    //                 take = dp[idx-1][s-val];
+
+    //             dp[idx][s] = take + not_take;
+    //         }
+    //     }
+
+    //     return dp[n-1][tar];
+    // }
+
+
+    // SPACE OPTIMIZATION
+    int findTargetSumWays(vector<int>& nums, int target) {
+        int n = nums.size();
+        int ts = 0;
+        for(auto i : nums)  ts += i;
+
+        if(ts-target<0 || (ts-target)%2 !=0 )  
+            return 0;
+
+        int tar = (ts-target)/2;
+
+        vector<int> prev (tar+1, 0);
+        vector<int> curr (tar+1, 0);
+
+        prev[0] = curr[0] = 1;
+        if(nums[0] == 0) prev[0] = 2;  // 2 cases -pick and not pick
+        else prev[0] = 1;  // 1 case - not pick
+        
+        if(nums[0]!=0 && nums[0]<=tar) 
+            prev[nums[0]] = 1;  // 1 case -pick
+
+        for(int idx=1; idx<n; idx++)    {
+            int val = nums[idx];
+            for(int s=0; s<tar+1; s++)  {
+                int not_take = prev[s];
+                int take = 0;
+                if(val<=s)  
+                    take = prev[s-val];
+
+                curr[s] = take + not_take;
+            }
+            prev = curr;
+        }
+
+        return prev[tar];
+    }
+
+};
