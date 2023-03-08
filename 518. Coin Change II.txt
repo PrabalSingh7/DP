@@ -1,0 +1,160 @@
+518. Coin Change II
+Medium
+6.9K
+122
+Companies
+You are given an integer array coins representing coins of different denominations and an integer amount representing a total amount of money.
+
+Return the number of combinations that make up that amount. If that amount of money cannot be made up by any combination of the coins, return 0.
+
+You may assume that you have an infinite number of each kind of coin.
+
+The answer is guaranteed to fit into a signed 32-bit integer.
+
+ 
+
+Example 1:
+
+Input: amount = 5, coins = [1,2,5]
+Output: 4
+Explanation: there are four ways to make up the amount:
+5=5
+5=2+2+1
+5=2+1+1+1
+5=1+1+1+1+1
+Example 2:
+
+Input: amount = 3, coins = [2]
+Output: 0
+Explanation: the amount of 3 cannot be made up just with coins of 2.
+Example 3:
+
+Input: amount = 10, coins = [10]
+Output: 1
+ 
+
+Constraints:
+
+1 <= coins.length <= 300
+1 <= coins[i] <= 5000
+All the values of coins are unique.
+0 <= amount <= 5000
+Accepted
+394.9K
+Submissions
+653.7K
+Acceptance Rate
+60.4%
+
+
+
+
+C++ || Knapsack variation || Dynamic Programming
+_prabal_singh_
+100 Days Badge 2022
+12
+a few seconds ago
+Intuition
+Knapsack variation in Dynamic Programming.
+
+Approach
+Firstly, we obtain the recurrence relation and apply memoization , this solution will work but its not the optimized one.
+Secondly, we convert this relation to Tabulation and then further optimize it to convert it to T(O) = O(namount) & S(O) = O(2amount).
+
+download (2).jfif
+
+Complexity
+Time complexity : O(n*amount)
+Space complexity : O(2*amount)
+Code
+class Solution {
+public:
+    // // RECURSION + MEMOIZATION : gives TLE
+    // int fun(int idx, int amount, vector<int> coins, vector<vector<int>> &dp) {
+
+    //     if(idx==0)  {
+    //         if(amount%coins[0]==0)  {
+    //             return 1;
+    //         }
+    //         return 0;
+    //     }
+
+    //     if(dp[idx][amount]!=-1)
+    //         return dp[idx][amount];
+
+    //     int val = coins[idx];
+    //     int take = 0;
+
+    //     int not_take = fun(idx-1,amount,coins,dp);
+    //     for(int i=1; val*i <= amount; i++)  {
+    //         int curr = fun(idx-1,amount-(val*i),coins,dp);
+    //         if(curr>-1)
+    //             take +=  curr;
+    //     }
+
+    //     return dp[idx][amount] = take+not_take;
+    // }
+
+    // int coinChange(vector<int>& coins, int amount) {
+    //     int n = coins.size();
+
+    //     vector<vector<int>> dp (n, vector<int> (amount+1,-1));
+
+    //     int res = fun(n-1,amount,coins,dp);
+        
+    //     return res>=1e8 ? -1 : res;
+    // }
+
+
+
+
+    // int change(int amount, vector<int>& coins) {
+    //     int n = coins.size();
+
+    //     vector<vector<int>> dp (n, vector<int> (amount+1,-1));
+
+    //     int res = fun(n-1,amount,coins,dp);
+        
+    //     return res;
+    // }
+
+
+    //  TABULATION  + SPACE OPTIMIZATION
+    int change(int amount, vector<int>& coins) {
+        int n = coins.size();
+        // sort(coins.begin(), coins.end());
+        
+        vector<int> prev (amount+1,0);
+        vector<int> curr (amount+1,0);
+
+        for(int i=0; i<amount+1; i++)  {
+            if(i%coins[0]==0)
+                prev[i] = 1;
+        }
+
+        for(int idx=1; idx<n; idx++)  {
+            int val = coins[idx];
+            for(int amt=0; amt<amount+1; amt++)    {
+                int not_take = prev[amt]; 
+
+                int take = 0;
+                for(int i=1; val*i <= amt; i++)  {
+                    int curr = prev[amt-(val*i)];
+                    if(curr>-1)
+                        take += curr;
+                }
+
+                curr[amt] = take + not_take;
+            }
+
+            prev = curr;
+        }
+        
+        return prev[amount] ;
+    }
+};
+sad-thumbs-up-cat.3.meme.webp
+
+0
+0
+
