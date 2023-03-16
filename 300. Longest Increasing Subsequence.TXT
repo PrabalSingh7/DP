@@ -45,11 +45,13 @@ Acceptance Rate
 
 class Solution {
 public:
+        // DYNAMIC PROGRAMMING ( TABULATION )
     int lengthOfLIS(vector<int>& nums) {
         int n = nums.size();
 
         vector<int> dp(n,1);
         vector<int> hash(n,-1);
+        int maxi = -1;
 
         for(int i=0; i<n; i++)
             hash[i] = i;
@@ -63,18 +65,20 @@ public:
                     }
                 }
             }
-        }
-
-        int res = -1e9;
-        int res_idx = -1;
-        for(int i=0; i<n; i++)      {
-            if(dp[i]>res)   {
-                res = dp[i];
-                res_idx = i;
-            }
+            maxi = max(maxi,dp[i]);
         }
 
         //FOR PRINTING THE SUB SEQUENCE
+
+
+        // int res = -1e9;
+        // int res_idx = -1;
+        // for(int i=0; i<n; i++)      {
+        //     if(dp[i]>res)   {
+        //         res = dp[i];
+        //         res_idx = i;
+        //     }
+        // }
 
         // int idx = res_idx;
         // vector<int> vec;
@@ -89,37 +93,37 @@ public:
         // for(auto i : vec)
         //     cout<<i<<" ";
 
-        return res;
+        return maxi;
     }
 
 
 
 
 
-    int lengthOfLIS(vector<int>& arr) {
-        int n = arr.size();
+    // int lengthOfLIS(vector<int>& arr) {
+    //     int n = arr.size();
     
-        vector<int> temp;
-        temp.push_back(arr[0]);
+    //     vector<int> temp;
+    //     temp.push_back(arr[0]);
         
-        int len = 1;
+    //     int len = 1;
         
-        for(int i=1; i<n; i++){
-            if(arr[i]>temp.back()){
-            // arr[i] > the last element of temp array 
+    //     for(int i=1; i<n; i++){
+    //         if(arr[i]>temp.back()){
+    //         // arr[i] > the last element of temp array 
             
-            temp.push_back(arr[i]);
-            len++;
+    //         temp.push_back(arr[i]);
+    //         len++;
             
-            } 
-            else{
-        // replacement step
-                int ind = lower_bound(temp.begin(),temp.end(),arr[i]) - temp.begin();
-                temp[ind] = arr[i];
-            }
+    //         } 
+    //         else{
+    //     // replacement step
+    //             int ind = lower_bound(temp.begin(),temp.end(),arr[i]) - temp.begin();
+    //             temp[ind] = arr[i];
+    //         }
             
-        }
+    //     }
         
-        return len;
-    }
+    //     return len;
+    // }
 };
