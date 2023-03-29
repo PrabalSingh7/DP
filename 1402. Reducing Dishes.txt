@@ -1,0 +1,227 @@
+1402. Reducing Dishes
+Hard
+1.5K
+178
+Companies
+A chef has collected data on the satisfaction level of his n dishes. Chef can cook any dish in 1 unit of time.
+
+Like-time coefficient of a dish is defined as the time taken to cook that dish including previous dishes multiplied by its satisfaction level i.e. time[i] * satisfaction[i].
+
+Return the maximum sum of like-time coefficient that the chef can obtain after dishes preparation.
+
+Dishes can be prepared in any order and the chef can discard some dishes to get this maximum value.
+
+ 
+
+Example 1:
+
+Input: satisfaction = [-1,-8,0,5,-9]
+Output: 14
+Explanation: After Removing the second and last dish, the maximum total like-time coefficient will be equal to (-1*1 + 0*2 + 5*3 = 14).
+Each dish is prepared in one unit of time.
+Example 2:
+
+Input: satisfaction = [4,3,2]
+Output: 20
+Explanation: Dishes can be prepared in any order, (2*1 + 3*2 + 4*3 = 20)
+Example 3:
+
+Input: satisfaction = [-1,-4,-5]
+Output: 0
+Explanation: People do not like the dishes. No dish is prepared.
+ 
+
+Constraints:
+
+n == satisfaction.length
+1 <= n <= 500
+-1000 <= satisfaction[i] <= 1000
+Accepted
+58.7K
+Submissions
+80.6K
+Acceptance Rate
+72.9%
+
+
+
+
+
+C++ || Dynamic Programming || Commented Code
+_prabal_singh_
+100 Days Badge 2022
+14
+a few seconds ago
+Intuition
+Greedy Approach using Dynamic Programming!
+
+Approach
+Firstly , we will sort the satisfaction array , as there is not point in having a large negative value later on cause that will give a large negative like_time value and that is not desirable as we need to maximize the like_time value.
+
+Secondly, regarding every index we can clearly see we have 2 options ie to pick or not_pick that value.
+
+AND THUS , DUE TO THIS OPTION OF PICKING AND NOT_PICKING WE CAN THINK THAT THIS MIGHT USE RECURSION & DYNAMIC PROGRAMMING !
+THEN , AS WE ALREADY HAVE PICK / NOT_PICK APPROACH . NOW , WE WILL LOOK AT THE CONSTRAINTS , here its <500 : THUS WE CAN CLEARLY USE A RECURSION + DYNAMIC PROGRAMMING approach.
+
+RECURRENCE RELATION :
+pick = sat[i]*count + f(i+1,count+1);
+not_pick = 0 + f(i+1,count);
+return max(pick,not_pick)
+
+use MEMOIZATION to optimize this :
+DP[N][N+1]
+
+Convert this to a TABULATION solution (further optimization) :
+-> DP[N][N+2]
+-> convert base case in recurrence to starting case of tabulation.
+-> run loops as
+outter : (idx = n-2 to 0)
+inner : (cnt=1 to n+1)
+use same recurrence relation inside !
+
+SPACE OPTIMIZATION (not neccessay) :
+->as we can clearly see that there is a relation of idx to idx+1 : THAT IS THE RELATION DEPENDENCY OF CURRENT STATE ON PREVIOUS (AHEAD) STATE , clear sign we can Space Optimize it !
+-> use ahead[n+2] & curr[n+2] in tabulation instead of dp[n][n+2]
+-> as one iteration ends , put value of ahead in curr & repeat.
+
+download (2).jfif
+
+Complexity
+Time complexity : O(2^n) -> O(n*n)
+Space complexity : O(n+2)
+download (1).jfif
+
+Code
+class Solution {
+public:
+
+    // //RECURSION only
+    // int fun(int idx, int cnt, vector<int> sat)  {
+    //     if(idx==sat.size()-1)    {
+    //         return max(0, sat[idx]*cnt);
+    //     }
+
+    //     int maxi = -1e8;
+    //     //pick 
+    //     int p = sat[idx]*cnt + fun(idx+1,cnt+1,sat);
+    //     maxi = max(p,maxi);
+    //     //not pick
+    //     int np = 0 + fun(idx+1,cnt,sat);
+    //     maxi = max(np,maxi);
+
+    //     return maxi;
+    // }
+
+    // int maxSatisfaction(vector<int>& sat) {
+    //     int n = sat.size();
+    //     sort(sat.begin(),sat.end());
+
+    //     return fun(0,1,sat);
+    // }
+
+
+
+
+
+    // //RECURSION + MEMOIZATION
+    // int fun(int idx, int cnt, vector<int> sat, vector<vector<int>> &dp)  {
+    //     if(idx==sat.size()-1)    {
+    //         return max(0, sat[idx]*cnt);
+    //     }
+
+    //     if(dp[idx][cnt]!=-1e8)  {
+    //         return dp[idx][cnt];
+    //     }
+
+    //     int maxi = -1e8;
+    //     //pick 
+    //     int p = sat[idx]*cnt + fun(idx+1,cnt+1,sat,dp);
+    //     maxi = max(p,maxi);
+    //     //not pick
+    //     int np = 0 + fun(idx+1,cnt,sat,dp);
+    //     maxi = max(np,maxi);
+
+    //     return dp[idx][cnt] = maxi;
+    // }
+
+    // int maxSatisfaction(vector<int>& sat) {
+    //     int n = sat.size();
+    //     sort(sat.begin(),sat.end());
+
+    //     vector<vector<int>> dp (n, vector<int> (n+1,-1e8));
+
+    //     return fun(0,1,sat,dp);
+    // }
+
+
+
+
+
+
+
+    // //  TABULATION
+
+    // int maxSatisfaction(vector<int>& sat) {
+    //     int n = sat.size();
+    //     sort(sat.begin(),sat.end());
+
+    //     vector<vector<int>> dp (n, vector<int> (n+2,-1e8));
+
+    //     for(int i=0; i<n+2; i++)    {
+    //         dp[n-1][i] = max(0,sat[n-1]*i);
+    //     }
+
+    //     for(int idx = n-2; idx>=0; idx--)   {
+    //         for(int cnt=1; cnt<n+1; cnt++)  {
+    //             int maxi = -1e8;
+    //             //pick 
+    //             int p = sat[idx]*cnt + dp[idx+1][cnt+1];
+    //             maxi = max(p,maxi);
+    //             //not pick
+    //             int np = 0 + dp[idx+1][cnt];
+    //             maxi = max(np,maxi);
+
+    //             dp[idx][cnt] = maxi;
+    //         }
+    //     }
+
+    //     return dp[0][1];
+    // }
+
+
+
+
+
+    //  SPACE OPTIMIZATION
+    int maxSatisfaction(vector<int>& sat) {
+        int n = sat.size();
+        sort(sat.begin(),sat.end());
+
+        vector<int> ahead (n+2,-1e8);
+        vector<int> curr (n+2,-1e8);
+
+        for(int i=0; i<n+2; i++)    {
+            ahead[i] = max(0,sat[n-1]*i);
+        }
+
+        for(int idx = n-2; idx>=0; idx--)   {
+            for(int cnt=1; cnt<n+1; cnt++)  {
+                int maxi = -1e8;
+                //pick 
+                int p = sat[idx]*cnt + ahead[cnt+1];
+                maxi = max(p,maxi);
+                //not pick
+                int np = 0 + ahead[cnt];
+                maxi = max(np,maxi);
+
+                curr[cnt] = maxi;
+            }
+            ahead = curr;
+        }
+
+        return ahead[1];
+    }
+};
+0
+0
+
