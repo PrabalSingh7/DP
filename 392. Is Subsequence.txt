@@ -1,0 +1,65 @@
+392. Is Subsequence
+Easy
+7.1K
+407
+Companies
+Given two strings s and t, return true if s is a subsequence of t, or false otherwise.
+
+A subsequence of a string is a new string that is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (i.e., "ace" is a subsequence of "abcde" while "aec" is not).
+
+ 
+
+Example 1:
+
+Input: s = "abc", t = "ahbgdc"
+Output: true
+Example 2:
+
+Input: s = "axc", t = "ahbgdc"
+Output: false
+ 
+
+Constraints:
+
+0 <= s.length <= 100
+0 <= t.length <= 104
+s and t consist only of lowercase English letters.
+ 
+
+Follow up: Suppose there are lots of incoming s, say s1, s2, ..., sk where k >= 109, and you want to check one by one to see if t has its subsequence. In this scenario, how would you change your code?
+Accepted
+807.7K
+Submissions
+1.7M
+Acceptance Rate
+47.6%
+
+
+
+class Solution {
+public:
+    int f(int si, int ti, string s, string t, vector<vector<int>> &dp)   {
+        if(si==s.size())    {
+            return dp[si][ti] = ti<=t.size() ? 1 : 0;
+        }
+        if(ti==t.size())    {
+            return dp[si][ti] = si==s.size() ? 1 : 0;
+        }
+
+        if(dp[si][ti]!=-1)  
+            return dp[si][ti];
+
+        if(s[si]==t[ti])    {
+            return dp[si][ti] = f(si+1,ti+1,s,t,dp);
+        }
+        else {
+            return dp[si][ti] = f(si,ti+1,s,t,dp);
+        }
+        
+    }
+
+    bool isSubsequence(string s, string t) {
+        vector<vector<int>> dp (s.size()+1, vector<int> (t.size()+1, -1));
+        return f(0,0,s,t,dp);
+    }
+};
