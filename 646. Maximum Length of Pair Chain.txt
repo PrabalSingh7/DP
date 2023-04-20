@@ -1,0 +1,157 @@
+646. Maximum Length of Pair Chain
+Medium
+2.9K
+113
+Companies
+You are given an array of n pairs pairs where pairs[i] = [lefti, righti] and lefti < righti.
+
+A pair p2 = [c, d] follows a pair p1 = [a, b] if b < c. A chain of pairs can be formed in this fashion.
+
+Return the length longest chain which can be formed.
+
+You do not need to use up all the given intervals. You can select pairs in any order.
+
+ 
+
+Example 1:
+
+Input: pairs = [[1,2],[2,3],[3,4]]
+Output: 2
+Explanation: The longest chain is [1,2] -> [3,4].
+Example 2:
+
+Input: pairs = [[1,2],[7,8],[4,5]]
+Output: 3
+Explanation: The longest chain is [1,2] -> [4,5] -> [7,8].
+ 
+
+Constraints:
+
+n == pairs.length
+1 <= n <= 1000
+-1000 <= lefti < righti <= 1000
+Accepted
+133.8K
+Submissions
+236.8K
+Acceptance Rate
+56.5%
+
+
+class Solution {
+public:
+    // int fun(int idx, int prev,  vector<vector<int>> vec, vector<vector<int>> &dp)    {
+    //     // cout<<idx<<" "<<prev<<"\n";
+    //     if(idx>vec.size()) 
+    //         return 0;
+
+    //     if(dp[idx][prev]!=-1)    
+    //         return dp[idx][prev]; 
+
+    //     int pick=0, not_pick=0;
+
+    //     if(prev==0)  {
+    //         //pick
+    //         pick = 1 + fun(idx+1,idx,vec,dp);
+    //         //not pick
+    //         not_pick = 0 + fun(idx+1,prev,vec,dp);
+    //     }
+    //     else {
+    //         if(vec[idx-1][0] > vec[prev-1][1])  {
+    //             //pick
+    //             pick = 1 + fun(idx+1,idx,vec,dp);
+    //             //not pick
+    //             not_pick = 0 + fun(idx+1,prev,vec,dp);
+    //         } 
+    //         else {
+    //             //can't pick
+    //             not_pick = 0 + fun(idx+1,prev,vec,dp);
+    //         }            
+    //     }
+
+    //     return dp[idx][prev] = max(pick,not_pick);
+    // }
+
+    // int findLongestChain(vector<vector<int>>& pairs) {
+    //     map<int, vector<int>> mp;
+    //     int n = pairs.size();cout<<n<<'\n';
+
+    //     for(int i=0; i<n; i++)   {
+    //         int u = pairs[i][0];
+    //         int v = pairs[i][1];
+    //         mp[u].push_back(v);
+    //     }
+        
+    //     vector<vector<int>> vec;
+    //     for(auto i : mp)    { 
+    //         sort(i.second.begin(),i.second.end());
+    //         for(auto j : i.second)  {
+    //             vector<int> temp;
+    //             temp.push_back(i.first);
+    //             temp.push_back(j);
+    //             vec.push_back(temp);     
+    //         } 
+    //     }
+
+    //     vector<vector<int>> dp (n+1, vector<int> (n+1, -1));
+
+    //     return fun(1,0,vec,dp);
+    // }
+
+
+
+
+    int findLongestChain(vector<vector<int>>& pairs) {
+        map<int, vector<int>> mp;
+        int n = pairs.size(); 
+
+        for(int i=0; i<n; i++)   {
+            int u = pairs[i][0];
+            int v = pairs[i][1];
+            mp[u].push_back(v);
+        }
+        
+        vector<vector<int>> vec;
+        for(auto i : mp)    { 
+            sort(i.second.begin(),i.second.end());
+            for(auto j : i.second)  {
+                vector<int> temp;
+                temp.push_back(i.first);
+                temp.push_back(j);
+                vec.push_back(temp);     
+            } 
+        }
+
+        vector<vector<int>> dp (n+2, vector<int> (n+2, 0));
+
+
+        for(int idx=n; idx>=0; idx--) {
+            for(int prev=idx; prev>=0; prev--)   {
+                int pick=0, not_pick=0;
+
+                if(prev==0)  {
+                    //pick
+                    pick = 1 + dp[idx+1][idx] ;
+                    //not pick
+                    not_pick = 0 + dp[idx+1][prev] ;
+                }
+                else {
+                    if(vec[idx-1][0] > vec[prev-1][1])  {
+                        //pick
+                        pick = 1 + dp[idx+1][idx] ;
+                        //not pick
+                        not_pick = 0 + dp[idx+1][prev] ;
+                    } 
+                    else {
+                        //can't pick
+                        not_pick = 0 + dp[idx+1][prev] ;
+                    }            
+                }
+
+                dp[idx][prev] = max(pick,not_pick);
+            }
+        }
+ 
+        return dp[1][0];
+    }
+};
