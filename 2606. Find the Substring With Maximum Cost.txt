@@ -46,3 +46,33 @@ Submissions
 29.4K
 Acceptance Rate
 55.3%
+
+
+
+class Solution {
+public:
+    int kadaneAlgo(vector<int> vec) {
+        int mx_so_far=-1e9, mx_end_here=0;
+
+        for(auto it : vec) {
+            mx_end_here += it;
+            mx_so_far = max(mx_so_far,mx_end_here);
+            mx_end_here = mx_end_here<0 ? 0 : mx_end_here ;
+        }
+
+        return mx_so_far;
+    } 
+
+    int maximumCostSubstring(string s, string chars, vector<int>& vals) {
+        unordered_map<int,int> mp;
+
+        for(int i=0; i<chars.size(); i++)   
+            mp[chars[i]] = vals[i];
+
+        vector<int> util;
+        for(auto i : s) 
+            util.push_back(mp.find(i)!=mp.end() ? mp[i] : (i-'a')+1);
+        
+        return max(0,kadaneAlgo(util) );
+    }
+};
