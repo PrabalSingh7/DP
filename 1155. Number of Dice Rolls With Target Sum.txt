@@ -1,0 +1,104 @@
+1155. Number of Dice Rolls With Target Sum
+Medium
+3.8K
+121
+Companies
+You have n dice, and each die has k faces numbered from 1 to k.
+
+Given three integers n, k, and target, return the number of possible ways (out of the kn total ways) to roll the dice, so the sum of the face-up numbers equals target. Since the answer may be too large, return it modulo 109 + 7.
+
+ 
+
+Example 1:
+
+Input: n = 1, k = 6, target = 3
+Output: 1
+Explanation: You throw one die with 6 faces.
+There is only one way to get a sum of 3.
+Example 2:
+
+Input: n = 2, k = 6, target = 7
+Output: 6
+Explanation: You throw two dice, each with 6 faces.
+There are 6 ways to get a sum of 7: 1+6, 2+5, 3+4, 4+3, 5+2, 6+1.
+Example 3:
+
+Input: n = 30, k = 30, target = 500
+Output: 222616187
+Explanation: The answer must be returned modulo 109 + 7.
+ 
+
+Constraints:
+
+1 <= n, k <= 30
+1 <= target <= 1000
+Accepted
+179.6K
+Submissions
+333.1K
+Acceptance Rate
+53.9%
+
+
+
+class Solution {
+    int mod = 1e9+7;
+public:
+    // int fun(int cnt, int n, int k, int val, int target, vector<vector<int>> &dp) { 
+    //     if(cnt==n)  {
+    //         return dp[cnt][val] = val==target ? 1 : 0;
+    //     }
+
+    //     if(dp[cnt][val]!=-1)
+    //         return dp[cnt][val];
+
+    //     int curr = 0;
+    //     for(int i=1; i<=k; i++) {
+    //         if(val+i <= target)    {
+    //             int t = fun(cnt+1,n,k,val+i,target,dp);
+    //             t %= mod;
+    //             curr += t;
+    //             curr %= mod;
+    //         } 
+    //         else {
+    //             break;
+    //         }
+    //     }
+
+    //     return dp[cnt][val] = curr;
+    // }
+
+    // int numRollsToTarget(int n, int k, int target) {
+    //     vector<vector<int>> dp (n+1, vector<int> ((target*n)+1,-1));
+    //     return fun(0,n,k,0,target,dp);
+    // }
+
+
+
+    int numRollsToTarget(int n, int k, int target) {
+        vector<vector<int>> dp (n+1, vector<int> (max(k+1,(target*n)+1),0));
+
+        dp[n][target] = 1;
+
+        for(int cnt = n-1; cnt>=0; cnt--)   {
+            for(int val = 0; val < dp[cnt].size() ; val++  )   {
+                int curr = 0;
+                for(int i=1; i<=k; i++) {
+                    if(val+i <= target)    {
+                        int t = dp[cnt+1][val+i]; 
+                        t %= mod;
+                        curr += t;
+                        curr %= mod;
+                    } 
+                    else {
+                        break;
+                    }
+                }
+
+                dp[cnt][val] = curr;
+            } 
+        }
+
+        return dp[0][0];  
+    }
+};
