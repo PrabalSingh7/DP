@@ -1,0 +1,87 @@
+813. Largest Sum of Averages
+Medium
+1.9K
+91
+Companies
+You are given an integer array nums and an integer k. You can partition the array into at most k non-empty adjacent subarrays. The score of a partition is the sum of the averages of each subarray.
+
+Note that the partition must use every integer in nums, and that the score is not necessarily an integer.
+
+Return the maximum score you can achieve of all the possible partitions. Answers within 10-6 of the actual answer will be accepted.
+
+ 
+
+Example 1:
+
+Input: nums = [9,1,2,3,9], k = 3
+Output: 20.00000
+Explanation: 
+The best choice is to partition nums into [9], [1, 2, 3], [9]. The answer is 9 + (1 + 2 + 3) / 3 + 9 = 20.
+We could have also partitioned nums into [9, 1], [2], [3, 9], for example.
+That partition would lead to a score of 5 + 2 + 6 = 13, which is worse.
+Example 2:
+
+Input: nums = [1,2,3,4,5,6,7], k = 4
+Output: 20.50000
+ 
+
+Constraints:
+
+1 <= nums.length <= 100
+1 <= nums[i] <= 104
+1 <= k <= nums.length
+Accepted
+46.4K
+Submissions
+87.6K
+Acceptance Rate
+52.9%
+
+
+class Solution {
+public:
+    double fun(int idx, int k, vector<int> nums, int prev , vector<double> pre, vector<vector<vector<double>>> &dp) {
+        if(k<0)
+            return -1e6;
+        if(idx==0)    {
+            if(k==1)    {
+                double val = prev!=nums.size() ? pre[idx] - pre[prev] : pre[idx];
+                return dp[idx][k][prev] = val / (prev-idx);
+            }
+            else {
+                return dp[idx][k][prev] = -1e8;
+            }
+        }
+
+        if(dp[idx][k][prev]!=-1)
+            return dp[idx][k][prev];
+
+        //seperate out
+        double val = prev!=nums.size() ? pre[idx] - pre[prev] : pre[idx] ;
+        double sep = val/(prev-idx) + fun(idx-1,k-1,nums,idx,pre,dp);
+
+        //not seperate out
+        double not_sep = 0 + fun(idx-1,k,nums,prev,pre,dp);
+
+        return dp[idx][k][prev] = max(not_sep,sep);        
+    }
+
+
+    double largestSumOfAverages(vector<int>& nums, int k) {
+        double s = 0;
+        int n = nums.size();
+        vector<double> pre (n);
+
+        for(int i=n-1; i>=0; i--)  {
+            s += (double)nums[i];
+            pre[i] = s;
+        }
+
+        // for(auto i : pre)
+        //     cout<<i<<" ";
+
+        vector<vector<vector<double>>> dp (n, vector<vector<double>> (k+1, vector<double> (n+1,-1)));
+
+        return fun(n-1,k,nums,n,pre,dp);
+    }
+};
