@@ -1,0 +1,72 @@
+338. Counting Bits
+Easy
+9.4K
+448
+Companies
+Given an integer n, return an array ans of length n + 1 such that for each i (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.
+
+ 
+
+Example 1:
+
+Input: n = 2
+Output: [0,1,1]
+Explanation:
+0 --> 0
+1 --> 1
+2 --> 10
+Example 2:
+
+Input: n = 5
+Output: [0,1,1,2,1,2]
+Explanation:
+0 --> 0
+1 --> 1
+2 --> 10
+3 --> 11
+4 --> 100
+5 --> 101
+ 
+
+Constraints:
+
+0 <= n <= 105
+ 
+
+Follow up:
+
+It is very easy to come up with a solution with a runtime of O(n log n). Can you do it in linear time O(n) and possibly in a single pass?
+Can you do it without using any built-in function (i.e., like __builtin_popcount in C++)?
+
+
+
+
+class Solution {
+public:
+    vector<int> countBits(int n) {
+        vector<int> vec (n+1, 0);
+        vec[0] = 0;
+
+        int prev = 0, pi = 0;
+        int bl = pow(2,pi), k = 0;
+
+        for(int i=1; i<=n; i++) {
+            // cout<<i<<" "<<k<<" "<<prev<<" "<<bl<<" @ "<<prev + k<<"\n";
+            if(i < bl + bl/2) {
+                vec[i] = vec[prev + k++];
+            }
+            else if( i >= bl + bl/2)    {
+                vec[i] = vec[prev + k++] + 1;
+            }
+            if(i == bl*2 - 1 )   {
+                // cout<<"yes \n"; 
+                pi += 1;
+                bl = pow(2,pi);
+                prev = (bl - bl/2 ) - 1;
+                k = 1;
+            }
+        }
+
+        return vec;
+    }
+};
